@@ -1,75 +1,18 @@
 "use client";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
+import { identifyEquation } from "./identifyEquation";
 
 export default function Home() {
   const [equation, setEquation] = useState("");
   const [result, setResult] = useState("");
-
-  const parseEquation = (equation: string) => {
-    const normalizedEquation = equation.replace(/\s+/g, "").toLowerCase();
-
-    // Identificar hipérbole
-    const hyperbolaRegex = /(\d+)?x\^2\/(\d+)\s*-\s*(\d+)?y\^2\/(\d+)\s*=\s*1/;
-    const parabolaRegex = /x\^2\s*=\s*(\d+)y\s*|\s*y\^2\s*=\s*(\d+)x/;
-
-    let result = "";
-
-    // Identificar e calcular informações para hipérbole
-    const hyperbolaMatch = normalizedEquation.match(hyperbolaRegex);
-    if (hyperbolaMatch) {
-      const a2 = parseInt(hyperbolaMatch[2]); // A constante no denominador de x²
-      const b2 = parseInt(hyperbolaMatch[4]); // A constante no denominador de y²
-      const a = Math.sqrt(a2); // Raiz de a²
-      const c = Math.sqrt(a2 + b2); // Cálculo do foco da hipérbole
-
-      result = `
-        Tipo: Hipérbole
-        Vértices: (${a.toFixed(2)}, 0) e (${-a.toFixed(2)}, 0)
-        Focos: (${c.toFixed(2)}, 0) e (${-c.toFixed(2)}, 0)
-        Centro: (0, 0)
-        Distância do foco ao vértice (foco-vértice): ${(c - a).toFixed(2)}
-        Distância entre os focos: ${(2 * c).toFixed(2)}
-      `;
-    }
-
-    // Identificar e calcular informações para parábola
-    const parabolaMatch = normalizedEquation.match(parabolaRegex);
-    if (parabolaMatch) {
-      if (parabolaMatch[1]) {
-        // Caso para parábola com x² = 4ay
-        const a = parseInt(parabolaMatch[1]) / 4;
-        result = `
-          Tipo: Parábola
-          Vértice: (0, 0)
-          Foco: (0, ${a.toFixed(2)})
-          Diretiva: y = ${(-a).toFixed(2)}
-        `;
-      } else if (parabolaMatch[2]) {
-        // Caso para parábola com y² = 4ax
-        const b = parseInt(parabolaMatch[2]) / 4;
-        result = `
-          Tipo: Parábola
-          Vértice: (0, 0)
-          Foco: (${b.toFixed(2)}, 0)
-          Diretiva: x = ${(-b).toFixed(2)}
-        `;
-      }
-    }
-
-    if (!result) {
-      result = "Não foi possível identificar a equação. Verifique o formato.";
-    }
-
-    return result;
-  };
 
   const handleSubmit = () => {
     if (!equation.trim()) {
       setResult("Por favor, insira uma equação.");
       return;
     }
-    setResult(parseEquation(equation));
+    setResult(identifyEquation(equation));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
