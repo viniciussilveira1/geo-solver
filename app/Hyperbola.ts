@@ -5,28 +5,32 @@ interface HyperbolaPattern {
   processor: (match: RegExpMatchArray) => Hyperbola;
 }
 
-// Lista de padrões de equações de hipérbole reconhecidas
 const HYPERBOLA_PATTERNS: HyperbolaPattern[] = [
-  // Formas padrão centradas na origem (x²/a² - y²/b² = 1)
+  // Forma padrão: x²/a² - y²/b² = 1 (abertura horizontal)
   {
-    regex: /^x²\/(\d+\.?\d*)-y²\/(\d+\.?\d*)=1$/,
+    regex:
+      /^\s*x\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*-\s*y\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*=\s*1\s*$/i,
     processor: (match) => processStandardHyperbolaEquation(match, true, 0, 0),
   },
-  // Formas transladadas ((x-h)²/a² - (y-k)²/b² = 1)
+
+  // Forma transladada: (x±h)²/a² - (y±k)²/b² = 1 (abertura horizontal)
   {
     regex:
-      /^\(x([+-]\d+\.?\d*)\)²\/(\d+\.?\d*)-\(y([+-]\d+\.?\d*)\)²\/(\d+\.?\d*)=1$/,
+      /^\s*\(\s*x\s*([+-]\s*\d+\.?\d*)\s*\)\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*-\s*\(\s*y\s*([+-]\s*\d+\.?\d*)\s*\)\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*=\s*1\s*$/i,
     processor: (match) => processTranslatedHyperbolaEquation(match, true),
   },
-  // Formas padrão verticais (y²/a² - x²/b² = 1)
-  {
-    regex: /^y²\/(\d+\.?\d*)-x²\/(\d+\.?\d*)=1$/,
-    processor: (match) => processStandardHyperbolaEquation(match, false, 0, 0),
-  },
-  // Formas transladadas verticais ((y-k)²/a² - (x-h)²/b² = 1)
+
+  // Forma padrão: y²/a² - x²/b² = 1 (abertura vertical)
   {
     regex:
-      /^\(y([+-]\d+\.?\d*)\)²\/(\d+\.?\d*)-\(x([+-]\d+\.?\d*)\)²\/(\d+\.?\d*)=1$/,
+      /^\s*y\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*-\s*x\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*=\s*1\s*$/i,
+    processor: (match) => processStandardHyperbolaEquation(match, false, 0, 0),
+  },
+
+  // Forma transladada: (y±k)²/a² - (x±h)²/b² = 1 (abertura vertical)
+  {
+    regex:
+      /^\s*\(\s*y\s*([+-]\s*\d+\.?\d*)\s*\)\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*-\s*\(\s*x\s*([+-]\s*\d+\.?\d*)\s*\)\s*(?:²|\^?2)\s*\/\s*(\d+\.?\d*)\s*=\s*1\s*$/i,
     processor: (match) => processTranslatedHyperbolaEquation(match, false),
   },
 ];
